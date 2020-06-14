@@ -162,7 +162,11 @@ function PHOTILS.image_changed()
 end
 
 function PHOTILS.tagged_image_has_changed()
-    GUI.warning.label = _("The suggested tags were not generated\n for the currently selected image!")
+    if dt.preferences.read(MODULE_NAME, "auto_update_tags", "bool") then
+        PHOTILS.on_tags_clicked()
+    else
+        GUI.warning.label = _("The suggested tags were not generated\n for the currently selected image!")
+    end
 end
 
 function PHOTILS.paginate()
@@ -425,6 +429,13 @@ local plugin_display_views = {
 
 
 -- uses photils: prefix because script settings are all together and not seperated by script
+dt.preferences.register(MODULE_NAME,
+                        "auto_update_tags",
+                        "bool",
+                        _("photils: auto tag suggestions"),
+                        _("if enabled, tag suggestions are generated for each newly selected image (can slow down darktable)"),
+                        false)
+
 dt.preferences.register(MODULE_NAME,
                         "show_confidence",
                         "bool",
